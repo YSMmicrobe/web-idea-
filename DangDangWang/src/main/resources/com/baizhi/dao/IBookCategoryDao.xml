@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.IBookCategoryDao">
+    <resultMap id="retMap" type="BookCategory">
+        <id column="c_id" property="category_id"/>
+        <result column="c_name" property="category_name"/>
+        <collection property="bookList" ofType="Book">
+            <id column="book_id" property="book_id"/>
+            <result column="cid" property="cid"/>
+            <result column="book_name" property="book_name"/>
+            <result column="book_price" property="book_price"/>
+            <result column="groundingDate" property="groundingDate"/>
+            <result column="inventory" property="inventory"/>
+            <result column="author" property="author"/>
+            <result column="salenum" property="salenum"/>
+            <result column="messages" property="messages"/>
+            <result column="dangprice" property="dangprice"/>
+            <result column="product_image" property="product_image"/>
+        </collection>
+        <collection property="bookCategories" ofType="BookCategory">
+            <id column="category_id" property="category_id"/>
+            <result column="parent_id" property="parent_id"/>
+            <result column="category_name" property="category_name"/>
+            <collection property="bookList" ofType="Book">
+                <id column="book_id" property="book_id"/>
+                <result column="cid" property="cid"/>
+                <result column="book_name" property="book_name"/>
+                <result column="book_price" property="book_price"/>
+                <result column="groundingDate" property="groundingDate"/>
+                <result column="inventory" property="inventory"/>
+                <result column="author" property="author"/>
+                <result column="salenum" property="salenum"/>
+                <result column="messages" property="messages"/>
+                <result column="dangprice" property="dangprice"/>
+                <result column="product_image" property="product_image"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <resultMap id="cateList" type="BookCategory">
+        <id column="category_id" property="category_id"/>
+        <result column="CATEGORY_NAME" property="category_name"/>
+        <result column="bookNum" property="bookNum"/>
+        <result column="pname" property="parent_name"/>
+    </resultMap>
+
+    <resultMap id="cateName" type="BookCategory">
+        <id column="cid" property="category_id"/>
+        <result column="cname" property="category_name"/>
+        <result column="pname" property="parent_name"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="retMap">
+        select c1.category_id c_id,c1.category_name c_name,c2.*
+        from d_category c1 join d_category c2
+        on c1.category_id = c2.parent_id
+    </select>
+
+    <select id="selectOneByParentId" resultMap="cateList">
+        select c.CATEGORY_NAME pname,CATEGORY_ID,CATEGORY_NAME,count(BOOK_ID) bookNum
+        from D_CATEGORY c left join D_BOOK b on c.CATEGORY_ID = b.CID
+        where c.PARENT_ID = #{parent_id}
+        group by CATEGORY_ID,CATEGORY_NAME
+    </select>
+
+    <select id="selectCategoryName" resultMap="cateName">
+        select t1.CATEGORY_ID cid,t1.CATEGORY_NAME cname,t2.CATEGORY_NAME pname
+        from D_CATEGORY t1 left join D_CATEGORY t2
+        on t1.PARENT_ID = t2.CATEGORY_ID
+        <where>
+            <if test="cid == null ">
+                t1.PARENT_ID = #{pid}
+            </if>
+            <if test="cid != null">
+                t1.CATEGORY_ID = #{cid}
+            </if>
+        </where>
+    </select>
+
+    <select id="selecttitleByCategoryId" resultType="BookCategory">
+            select *
+            from D_CATEGORY
+            where CATEGORY_ID = #{id}
+    </select>
+
+</mapper>

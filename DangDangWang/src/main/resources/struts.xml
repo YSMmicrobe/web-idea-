@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="user" extends="struts-default" namespace="/user">
+		<action name="*" class="com.baizhi.action.UserAction" method="{1}">
+			<result name="register">/user/verify_form.jsp</result>
+			<result name="errorCode">/user/register_form.jsp</result>
+			<result name="email">/user/register_ok.jsp</result>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">main</param>
+			</result>
+			<result name="errorLogin">/user/login_form.jsp</result>
+		</action>
+	</package>
+
+	<package name="book1" extends="struts-default" namespace="/book">
+		<action name="*" class="com.baizhi.action.BookAction" method="{1}">
+			<result name="selectDet">/main/product.jsp</result>
+		</action>
+	</package>
+	<package name="categorys" extends="struts-default" namespace="/category">
+		<action name="*" method="{1}" class="com.baizhi.action.CategoryAction">
+			<result name="book_list">/main/book_list.jsp</result>
+		</action>
+	</package>
+
+	<package name="myP" extends="struts-default" namespace="/">
+		<action name="*" class="com.baizhi.action.IndexAction" method="{1}">
+			<result name="main">/main/main.jsp</result>
+		</action>
+	</package>
+
+	<package name="adrs" extends="struts-default" namespace="/address">
+		<action name="*" class="com.baizhi.action.AddressAction" method="{1}">
+			<result name="adrsList">/address/my_address.jsp</result>
+			<result name="success" type="redirectAction">adrsList</result>
+			<result name="error">/user/login_form.jsp</result>
+		</action>
+	</package>
+
+	<package name="cart1" extends="struts-default" namespace="/cart">
+		<action name="*" class="com.baizhi.action.CartAction" method="{1}">
+			<result name="success" type="redirect">/cart/cart_list.jsp</result>
+		</action>
+	</package>
+
+	<package name="myOrder" extends="struts-default" namespace="/order">
+		<action name="*" class="com.baizhi.action.OrderAction" method="{1}">
+			<result name="selectAddress">/order/address_form.jsp</result>
+			<result name="addOrder" type="redirect">/order/order_ok.jsp?order_id=${order.id}&amp;goodsPrice=${order.goodPrice}</result>
+			<result name="showOrder">/order/my_order.jsp</result>
+			<result name="pay" type="redirect">showOrder</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.IBookDao">
+    <resultMap id="bookDet" type="Book">
+        <id column="book_id" property="book_id"/>
+        <result column="cid" property="cid"/>
+        <result column="book_name" property="book_name"/>
+        <result column="book_price" property="book_price"/>
+        <result column="groundingDate" property="groundingDate"/>
+        <result column="inventory" property="inventory"/>
+        <result column="author" property="author"/>
+        <result column="salenum" property="salenum"/>
+        <result column="messages" property="messages"/>
+        <result column="dangprice" property="dangprice"/>
+        <result column="product_image" property="product_image"/>
+        <result column="cname" property="category_name"/>
+        <result column="pname" property="parent_category_name"/>
+    </resultMap>
+    <select id="selectMain" resultType="Book">
+        select *
+        from (select * from D_BOOK order by ${column})
+        where  ROWNUM &lt; #{index}
+    </select>
+
+    <!--selectOne-->
+    <select id="selectOne" resultMap="bookDet">
+        select t1.*,t2.CATEGORY_NAME cname,t3.CATEGORY_NAME pname
+        from D_BOOK t1 left join D_CATEGORY t2 on t1.CID = t2.CATEGORY_ID
+              left join D_CATEGORY t3
+              on t2.PARENT_ID = t3.CATEGORY_ID
+        where BOOK_ID=#{book_id}
+    </select>
+
+    <select id="selectAll" resultMap="bookDet">
+        select t1.*,t2.CATEGORY_NAME cname,t3.CATEGORY_ID pid,t3.CATEGORY_NAME pname
+        from D_BOOK t1 left join D_CATEGORY t2 on t1.CID = t2.CATEGORY_ID
+        left join D_CATEGORY t3
+        on t2.PARENT_ID = t3.CATEGORY_ID
+        <where>
+            <if test="category_id==null">
+                CID in (select CATEGORY_ID from D_CATEGORY where PARENT_ID = #{parent_id})
+            </if>
+            <if test=" category_id!=null ">
+                CID = #{category_id}
+            </if>
+        </where>
+    </select>
+</mapper>

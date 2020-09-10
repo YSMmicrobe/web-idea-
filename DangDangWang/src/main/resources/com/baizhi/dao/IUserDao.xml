@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.IUserDao">
+    <resultMap id="userRetM" type="User">
+        <id column="id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="nickname" property="nickname"/>
+        <result column="password" property="password"/>
+        <result column="state" property="state"/>
+    </resultMap>
+    <select id="selectByEmail" resultMap="userRetM">
+        select * from d_user where EMAIL = #{email}
+    </select>
+
+    <insert id="insertOne">
+        insert into d_user values (
+             seq_user.nextval,
+             #{email},
+             #{nickname},
+             #{password},
+             0)
+    </insert>
+
+    <update id="updateSta">
+        update d_user set STATE = 1 where EMAIL = #{email}
+    </update>
+</mapper>

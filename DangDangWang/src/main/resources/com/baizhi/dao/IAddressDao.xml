@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.IAddressDao">
+    <resultMap id="addrDet" type="Address">
+        <id column="id" property="id"/>
+        <result column="receive_name" property="recvName"/>
+        <result column="address" property="adrs"/>
+        <result column="mobile" property="mobile"/>
+        <result column="u_id" property="uid"/>
+        <result column="delete_state" property="deleState"/>
+        <result column="selected_state" property="seleState"/>
+    </resultMap>
+    <select id="selectAllNowByUId" resultMap="addrDet">
+        select * from D_ADDRESS where DELETE_STATE = 0 and U_ID = #{uid}
+    </select>
+
+    <insert id="insertOne">
+        insert into D_ADDRESS values (
+          SEQ_ADRS.nextval,
+          #{recvName},
+          #{adrs},
+          #{mobile},
+          #{uid},
+          0,
+          0
+        )
+    </insert>
+
+    <update id="updateState">
+        update D_ADDRESS set ${status} where ID = #{id}
+    </update>
+</mapper>
